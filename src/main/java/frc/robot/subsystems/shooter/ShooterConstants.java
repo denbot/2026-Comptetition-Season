@@ -4,8 +4,10 @@ import edu.wpi.first.units.measure.AngularAcceleration;
 
 public final class ShooterConstants {
 
-    public static final AngularAcceleration shooterAcceleration = null;
-    public static int FLYWHEEL_MOTOR_ID;
+    public static final AngularAcceleration spinnerAcceleration = null;
+    public static final AngularAcceleration kickerAcceleration = null;
+    public static int SPINNER_MOTOR_ID;
+    public static int KICKER_MOTOR_ID;
     public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
     public static final String canivoreSerial = "";

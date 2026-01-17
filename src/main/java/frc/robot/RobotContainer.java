@@ -25,6 +25,10 @@ import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
+import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.shooter.ShooterIOSim;
+import frc.robot.subsystems.shooter.ShooterIOTalonFX;
+
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -37,6 +41,7 @@ public class RobotContainer {
   // Subsystems
   private final Drive drive;
   private Intake intake;
+  private Shooter shooter;
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -60,6 +65,7 @@ public class RobotContainer {
                 new ModuleIOTalonFX(TunerConstants.BackRight));
 
         intake = new Intake();
+        shooter = new Shooter(new ShooterIOTalonFX());
 
         // The ModuleIOTalonFXS implementation provides an example implementation for
         // TalonFXS controller connected to a CANdi with a PWM encoder. The
@@ -89,6 +95,7 @@ public class RobotContainer {
                 new ModuleIOSim(TunerConstants.FrontRight),
                 new ModuleIOSim(TunerConstants.BackLeft),
                 new ModuleIOSim(TunerConstants.BackRight));
+        shooter = new Shooter(new ShooterIOSim());
         break;
 
       default:
@@ -100,6 +107,7 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {},
                 new ModuleIO() {});
+        shooter = new Shooter(new ShooterIOSim());
         break;
     }
 
@@ -165,8 +173,11 @@ public class RobotContainer {
                     drive)
                 .ignoringDisable(true));
 
-    controller.rightTrigger().onTrue(intake.getSpinIntakeCommand(0.5));
-  }
+    controller.rightTrigger().whileTrue(intake.getSpinIntakeCommand(1).andThen(intake.getStopIntakeCommand()));
+    controller.rightBumper().whileTrue(intake.getSpinIntakeCommand(-1).andThen(intake.getStopIntakeCommand()));
+
+    controller.leftTrigger().whileTrue(shooter.runSpinnerAtSpeed().andThen(shooter.stopSpinner()));
+}
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

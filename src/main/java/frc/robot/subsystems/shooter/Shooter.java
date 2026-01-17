@@ -16,7 +16,8 @@ public class Shooter extends SubsystemBase{
     private final ShooterIO io;
     private final ShooterIOInputsAutoLogged inputs = new ShooterIOInputsAutoLogged();
 
-    private AngularVelocity shooterVelocitySetpoint = RadiansPerSecond.zero();
+    private AngularVelocity spinnerVelocitySetpoint = RadiansPerSecond.zero();
+    private AngularVelocity kickerVelocitySetpoint = RadiansPerSecond.zero();
 
     public Shooter(ShooterIO io){
         this.io = io;
@@ -26,44 +27,75 @@ public class Shooter extends SubsystemBase{
     public void periodic(){
         io.updateInputs(inputs);
         Logger.processInputs("Shooter", inputs);
-        Logger.recordOutput("Shooter Connected", inputs.flywheelMotorConnected);
-        Logger.recordOutput("Shooter Velocity", inputs.velocityRotPerSec);
-        Logger.recordOutput("Shooter Position", inputs.positionRots);
-        Logger.recordOutput("Shooter Ampage", inputs.currentAmps);
-        Logger.recordOutput("Shooter Closed Loop Error", inputs.closedLoopErrorRot);
     }
 
-    public void setShooterSpeed(AngularVelocity Speed){
-        shooterVelocitySetpoint = Speed;
+    public void setSpinnerSpeed(AngularVelocity Speed){
+        spinnerVelocitySetpoint = Speed;
     }
-    public void setShooterSpeed(Double Speed){
-        shooterVelocitySetpoint = RotationsPerSecond.of(Speed);
+    public void setSpinnerSpeed(Double Speed){
+        spinnerVelocitySetpoint = RotationsPerSecond.of(Speed);
     }
-
-    public Command runShooterAtSpeed(){
-        return Commands.runOnce(() -> setShooterSpeed(60.0));
+    
+    public void setKickerSpeed(AngularVelocity Speed){
+        kickerVelocitySetpoint = Speed;
     }
-    public Command stopShooter(){
-        return Commands.runOnce(() -> setShooterSpeed(0.0));
-    }
-
-    public AngularVelocity getShooterVelocitySetpoint(){
-        return shooterVelocitySetpoint;
+    public void setKickerSpeed(Double Speed){
+        kickerVelocitySetpoint = RotationsPerSecond.of(Speed);
     }
 
-    public boolean getFlywheelConnected(){
-        return inputs.flywheelMotorConnected;
+    public Command runSpinnerAtSpeed(){
+        return Commands.runOnce(() -> setSpinnerSpeed(60.0));
     }
-    public AngularVelocity getFlywheelVelocity(){
-        return inputs.velocityRotPerSec;
+    public Command stopSpinner(){
+        return Commands.runOnce(() -> setSpinnerSpeed(0.0));
     }
-    public double getFlywheelClosedLoopError(){
-        return inputs.closedLoopErrorRot;
+
+    public Command runKickerAtSpeed(){
+        return Commands.runOnce(() -> setSpinnerSpeed(60.0));
     }
-    public Current getFlywheelAmpage(){
-        return inputs.currentAmps;
+    public Command stopKicker(){
+        return Commands.runOnce(() -> setSpinnerSpeed(0.0));
     }
-    public Angle getFlywheelPosition(){
-        return inputs.positionRots;
+
+    public AngularVelocity getSpinnerVelocitySetpoint(){
+        return spinnerVelocitySetpoint;
     }
-}
+    public AngularVelocity getKickerVelocitySetpoint(){
+        return kickerVelocitySetpoint;
+    }
+
+    public boolean getSpinnerConnected(){
+        return inputs.spinnerMotorConnected;
+    }
+    public boolean getKickerConnected(){
+        return inputs.kickerMotorConnected;
+    }
+
+    public AngularVelocity getSpinnerVelocity(){
+        return inputs.spinnerRotationSpeed;
+    }
+    public AngularVelocity getkickerVelocity(){
+        return inputs.kickerRotationSpeed;
+    }
+
+    public Angle getSpinnerPosition(){
+        return inputs.spinnerPositionRots;
+    }
+    public Angle getkickerPosition(){
+        return inputs.kickerPositionRots;
+    }
+
+    public Double getSpinnerClosedLoopError(){
+        return inputs.spinnerClosedLoopError;
+    }
+    public Double getKickerClosedLoopError(){
+        return inputs.kickerClosedLoopError;
+    }
+
+    public Current getSpinnerCurrent(){
+        return inputs.spinnerCurrentAmps;
+    }
+    public Current getKickerCurrent(){
+        return inputs.kickerCurrentAmps;
+    }
+}   

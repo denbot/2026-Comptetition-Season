@@ -14,14 +14,20 @@ import edu.wpi.first.units.measure.Angle;
 public interface ShooterIO {
     @AutoLog
     public static class ShooterIOInputs {
-        public boolean flywheelMotorConnected = false;
-        public AngularVelocity velocityRotPerSec = RevolutionsPerSecond.zero();
-        public double closedLoopErrorRot = 0.0;
-        public Current currentAmps = Amp.zero();
-        public Angle positionRots = Degree.zero();
+        public boolean spinnerMotorConnected = false;
+        public boolean kickerMotorConnected = false;
+        public AngularVelocity spinnerRotationSpeed = RevolutionsPerSecond.zero();
+        public AngularVelocity kickerRotationSpeed = RevolutionsPerSecond.zero();
+        public double spinnerClosedLoopError = 0.0;
+        public double kickerClosedLoopError = 0.0;
+        public Current spinnerCurrentAmps = Amp.zero();
+        public Current kickerCurrentAmps = Amp.zero();
+        public Angle spinnerPositionRots = Degree.zero();
+        public Angle kickerPositionRots = Degree.zero();
     }
 
     //sets shooter velocity in RevolutionsPerSec
       public default void updateInputs(ShooterIOInputs inputs) {}
-      public default void setShooterVelocity(AngularVelocity velocity) {}
+      public default void setSpinnerVelocity(AngularVelocity velocity) {}
+      public default void setKickerVelocity(AngularVelocity velocity) {}
 }

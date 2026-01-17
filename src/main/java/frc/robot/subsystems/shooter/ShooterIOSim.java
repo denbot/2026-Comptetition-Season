@@ -10,37 +10,61 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 
 public class ShooterIOSim implements ShooterIO{
-    private static final DCMotor shooterMotor = DCMotor.getKrakenX60Foc(1);
+    private static final DCMotor spinnerMotor = DCMotor.getKrakenX60Foc(1);
+    private static final DCMotor kickerMotor = DCMotor.getKrakenX60Foc(1);
 
-    private DCMotorSim shooterMotorSim;
+    private DCMotorSim spinnerMotorSim;
+    private DCMotorSim kickerMotorSim;
 
-    private PIDController shooterController = new PIDController(0, 0, 0);
+    private PIDController spinnerController = new PIDController(0, 0, 0);
+    private PIDController kickerController = new PIDController(0, 0, 0);
 
-    private double appliedVolts = 0.0;
+    private double spinnerAppliedVolts = 0.0;
+    private double kickerAppliedVolts = 0.0;
 
     public ShooterIOSim(){
-        shooterMotorSim = 
+        spinnerMotorSim = 
         new DCMotorSim(
-            LinearSystemId.createDCMotorSystem(shooterMotor, 0.1, 0.1), 
-            shooterMotor);   
-    }
-
-    public void updateInputs(ShooterIOInputs inputs){
-        appliedVolts = shooterController.calculate(shooterMotorSim.getAngularVelocity().in(RotationsPerSecond));
-
-        shooterMotorSim.setInputVoltage(appliedVolts);
-        shooterMotorSim.update(0.02);
-
-        inputs.flywheelMotorConnected = true;
+            LinearSystemId.createDCMotorSystem(spinnerMotor, 0.1, 0.1), 
+            spinnerMotor);   
         
-        inputs.velocityRotPerSec = RotationsPerSecond.of(shooterMotorSim.getAngularVelocityRPM() / 60);
-        inputs.currentAmps = Amp.of(shooterMotorSim.getCurrentDrawAmps());
-
-        inputs.positionRots = shooterMotorSim.getAngularPosition();
-        inputs.closedLoopErrorRot = shooterController.getError();
+        kickerMotorSim = 
+        new DCMotorSim(
+            LinearSystemId.createDCMotorSystem(kickerMotor, 0.1, 0.1), 
+            kickerMotor);   
     }
 
-    public void setShooterVelocity(AngularVelocity velocity){
-        shooterController.setSetpoint(velocity.in(RotationsPerSecond));
+    @Override
+    public void updateInputs(ShooterIOInputs inputs){
+        spinnerAppliedVolts = spinnerController.calculate(spinnerMotorSim.getAngularVelocity().in(RotationsPerSecond));
+        kickerAppliedVolts = kickerController.calculate(kickerMotorSim.getAngularVelocity().in(RotationsPerSecond));
+
+        spinnerMotorSim.setInputVoltage(spinnerAppliedVolts);
+        kickerMotorSim.setInputVoltage(kickerAppliedVolts);
+
+        spinnerMotorSim.update(0.02);
+        kickerMotorSim.update(0.02);
+
+        inputs.spinnerMotorConnected = true;
+        inputs.kickerMotorConnected = true;
+        
+        inputs.spinnerRotationSpeed = RotationsPerSecond.of(spinnerMotorSim.getAngularVelocityRPM() / 60);
+        inputs.kickerRotationSpeed = RotationsPerSecond.of(kickerMotorSim.getAngularVelocityRPM() / 60);
+        
+        inputs.spinnerCurrentAmps = Amp.of(spinnerMotorSim.getCurrentDrawAmps());
+        inputs.kickerCurrentAmps = Amp.of(kickerMotorSim.getCurrentDrawAmps());
+
+        inputs.spinnerPositionRots = spinnerMotorSim.getAngularPosition();
+        inputs.kickerPositionRots = kickerMotorSim.getAngularPosition();
+        
+        inputs.spinnerClosedLoopError = spinnerController.getError();
+        inputs.kickerClosedLoopError = kickerController.getError();
+    }
+
+    public void setSpinnerVelocity(AngularVelocity velocity){
+        spinnerController.setSetpoint(velocity.in(RotationsPerSecond));
+    }
+    public void setKickerVelocity(AngularVelocity velocity){
+        kickerController.setSetpoint(velocity.in(RotationsPerSecond));
     }
 }
