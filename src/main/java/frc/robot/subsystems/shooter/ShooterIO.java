@@ -16,13 +16,12 @@ public interface ShooterIO {
     public static class ShooterIOInputs {
         public boolean flywheelMotorConnected = false;
         public AngularVelocity velocityRotPerSec = RevolutionsPerSecond.zero();
-        public double rotatorClosedLoopErrorROt = 0.0;
-        public Current leftCurrentAmps = Amp.zero();
-        public Angle rotatorPositionTOr = Degree.zero();
+        public double closedLoopErrorRot = 0.0;
+        public Current currentAmps = Amp.zero();
+        public Angle positionRots = Degree.zero();
     }
 
     //sets shooter velocity in RevolutionsPerSec
       public default void updateInputs(ShooterIOInputs inputs) {}
       public default void setShooterVelocity(AngularVelocity velocity) {}
-
 }

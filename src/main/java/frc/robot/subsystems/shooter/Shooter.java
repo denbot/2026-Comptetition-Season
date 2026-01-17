@@ -3,9 +3,11 @@ package frc.robot.subsystems.shooter;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
-import java.util.logging.Logger;
+import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -22,7 +24,13 @@ public class Shooter extends SubsystemBase{
 
     @Override
     public void periodic(){
-        Logger.processInputs("Shooter", inputs)
+        io.updateInputs(inputs);
+        Logger.processInputs("Shooter", inputs);
+        Logger.recordOutput("Shooter Connected", inputs.flywheelMotorConnected);
+        Logger.recordOutput("Shooter Velocity", inputs.velocityRotPerSec);
+        Logger.recordOutput("Shooter Position", inputs.positionRots);
+        Logger.recordOutput("Shooter Ampage", inputs.currentAmps);
+        Logger.recordOutput("Shooter Closed Loop Error", inputs.closedLoopErrorRot);
     }
 
     public void setShooterSpeed(AngularVelocity Speed){
@@ -41,5 +49,21 @@ public class Shooter extends SubsystemBase{
 
     public AngularVelocity getShooterVelocitySetpoint(){
         return shooterVelocitySetpoint;
+    }
+
+    public boolean getFlywheelConnected(){
+        return inputs.flywheelMotorConnected;
+    }
+    public AngularVelocity getFlywheelVelocity(){
+        return inputs.velocityRotPerSec;
+    }
+    public double getFlywheelClosedLoopError(){
+        return inputs.closedLoopErrorRot;
+    }
+    public Current getFlywheelAmpage(){
+        return inputs.currentAmps;
+    }
+    public Angle getFlywheelPosition(){
+        return inputs.positionRots;
     }
 }
