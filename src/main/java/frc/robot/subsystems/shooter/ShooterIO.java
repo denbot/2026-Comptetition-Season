@@ -27,7 +27,9 @@ public interface ShooterIO {
     }
 
     //sets shooter velocity in RevolutionsPerSec
-      public default void updateInputs(ShooterIOInputs inputs) {}
-      public default void setSpinnerVelocity(AngularVelocity velocity) {}
-      public default void setKickerVelocity(AngularVelocity velocity) {}
+    public default void updateInputs(ShooterIOInputs inputs) {}
+    public default void setSpinnerVelocity(AngularVelocity velocity) {}
+    public default void stopSpinner() {}
+    public default void setKickerVelocity(AngularVelocity velocity) {}
+    public default void stopKicker() {}
 }

@@ -9,6 +9,7 @@ import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.CoastOut;
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -123,8 +124,14 @@ public class ShooterIOTalonFX implements ShooterIO {
     public void setSpinnerVelocity(AngularVelocity velocity){
         spinnerMotor.setControl(new VelocityVoltage(velocity));
     }
-    
+    public void stopSpinner(AngularVelocity velocity){
+        spinnerMotor.setControl(new CoastOut());
+    }
+
     public void setKickerVelocity(AngularVelocity velocity){
         spinnerMotor.setControl(new VelocityVoltage(velocity));
+    }
+    public void stopKicker(AngularVelocity velocity){
+        kickerMotor.setControl(new CoastOut());
     }
 }

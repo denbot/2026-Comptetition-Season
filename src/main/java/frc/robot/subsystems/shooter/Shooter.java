@@ -27,6 +27,16 @@ public class Shooter extends SubsystemBase{
     public void periodic(){
         io.updateInputs(inputs);
         Logger.processInputs("Shooter", inputs);
+        Logger.recordOutput("Spinner Connected", inputs.spinnerMotorConnected);
+        Logger.recordOutput("Kicker Connected", inputs.kickerMotorConnected);
+        Logger.recordOutput("Spinner Velocity", inputs.spinnerRotationSpeed);
+        Logger.recordOutput("Kicker Velocity", inputs.kickerRotationSpeed);
+        Logger.recordOutput("Spinner Position", inputs.spinnerPositionRots);
+        Logger.recordOutput("Kicker Position", inputs.kickerPositionRots);
+        Logger.recordOutput("Spinner Closed Loop Error", inputs.spinnerClosedLoopError);
+        Logger.recordOutput("Kicker Closed Loop Error", inputs.kickerClosedLoopError);
+        Logger.recordOutput("Spinner Current", inputs.spinnerCurrentAmps);
+        Logger.recordOutput("Kicker Current", inputs.spinnerCurrentAmps);
     }
 
     public void setSpinnerSpeed(AngularVelocity Speed){
@@ -35,7 +45,7 @@ public class Shooter extends SubsystemBase{
     public void setSpinnerSpeed(Double Speed){
         spinnerVelocitySetpoint = RotationsPerSecond.of(Speed);
     }
-    
+
     public void setKickerSpeed(AngularVelocity Speed){
         kickerVelocitySetpoint = Speed;
     }
@@ -47,14 +57,14 @@ public class Shooter extends SubsystemBase{
         return Commands.runOnce(() -> setSpinnerSpeed(60.0));
     }
     public Command stopSpinner(){
-        return Commands.runOnce(() -> setSpinnerSpeed(0.0));
+        return Commands.runOnce(() -> setSpinnerSpeed(20.0));
     }
 
     public Command runKickerAtSpeed(){
         return Commands.runOnce(() -> setSpinnerSpeed(60.0));
     }
     public Command stopKicker(){
-        return Commands.runOnce(() -> setSpinnerSpeed(0.0));
+        return Commands.runOnce(() -> setSpinnerSpeed(20.0));
     }
 
     public AngularVelocity getSpinnerVelocitySetpoint(){

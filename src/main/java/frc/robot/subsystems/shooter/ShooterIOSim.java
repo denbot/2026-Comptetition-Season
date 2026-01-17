@@ -64,7 +64,13 @@ public class ShooterIOSim implements ShooterIO{
     public void setSpinnerVelocity(AngularVelocity velocity){
         spinnerController.setSetpoint(velocity.in(RotationsPerSecond));
     }
+    public void stopSpinner(){
+        spinnerController.setSetpoint(0);
+    }
     public void setKickerVelocity(AngularVelocity velocity){
         kickerController.setSetpoint(velocity.in(RotationsPerSecond));
+    }
+    public void stopKicker(){
+        kickerController.setSetpoint(0);
     }
 }
