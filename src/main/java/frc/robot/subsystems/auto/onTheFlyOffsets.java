@@ -7,35 +7,28 @@ import edu.wpi.first.math.geometry.Transform2d;
 
 public class onTheFlyOffsets {
     public enum trenchOffsets{
-        LEFT(getNewTransform(0, 0, 0)),
-        RIGHT(getNewTransform(0, 0, 0));
+        LEFT(0, 0, 0),
+        RIGHT(0, 0, 0);
 
         public final Transform2d transform;
 
-        trenchOffsets(Transform2d transform){
-            this.transform = transform;
+        trenchOffsets(double x, double y, double angle){
+            this.transform = new Transform2d(x, y, new Rotation2d(Degree.of(angle)));
         }
     }
 
     public enum neutralZoneOffsets{
-        CENTER_TOP(getNewTransform(0, 0, 0)),
-        CENTER_MID(getNewTransform(0, 0, 0)),
-        CENTER_BOTTOM(getNewTransform(0, 0, 0)),
-        CLOSE_TOP(getNewTransform(0, 0, 0)),
-        CLOSE_MID(getNewTransform(0, 0, 0)),
-        CLOSE_BOTTOM(getNewTransform(0, 0, 0)),
-        FAR_TOP(getNewTransform(0, 0, 0)),        
-        FAR_MID(getNewTransform(0, 0, 0)),        
-        FAR_BOTTOM(getNewTransform(0, 0, 0));
-        
-        public final Transform2d transform;
+        CENTER(0),
+        CLOSE(0),
+        FAR(0),
+        TOP(0),
+        MID(0),
+        BOTTOM(0);
 
-        neutralZoneOffsets(Transform2d transform){
-            this.transform = transform;
+        public final double value;
+        neutralZoneOffsets(double value){
+            this.value = value;
         }
     }
 
-    private static Transform2d getNewTransform(double x, double y, double angle){
-        return new Transform2d(x, y, new Rotation2d(Degree.of(angle)));
-    }
 }
