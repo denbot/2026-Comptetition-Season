@@ -102,4 +102,12 @@ public class Intake extends SubsystemBase {
   public Distance getIntakeExtensionLength() {
     return inputs.intakeExtensionLength;
   }
+
+  public boolean isDeployedDetected() {
+    return inputs.intakeDeployedSwitch;
+  }
+
+  public boolean isRetractionDetected() {
+    return inputs.intakeRetractedSwitch;
+  }
 }

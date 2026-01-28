@@ -21,8 +21,8 @@ public class IntakeIOSim implements IntakeIO {
     private DCMotorSim rackMotorSim;
 
     private SimpleMotorFeedforward spinnFeedforwards = new SimpleMotorFeedforward(0, 0); // TODO
-    private PIDController intakeController = new PIDController(0, 0, 0);
-    private PIDController rackController = new PIDController(0, 0, 0);
+    private PIDController intakeController = new PIDController(0, 0, 0); // TODO
+    private PIDController rackController = new PIDController(0, 0, 0); // TODO
 
     private double intakeAppliedVolts = 0.0;
     private double rackAppliedVolts = 0.0;
@@ -61,6 +61,14 @@ public class IntakeIOSim implements IntakeIO {
 
         inputs.stallCurrentIntake = null;
         inputs.stallCurrentRack = null;
+
+        if (rackController.getSetpoint() == (IntakeConstants.intakeRotationsToRackRatio * IntakeConstants.intakeMaxExtensionLength)) {
+            inputs.intakeDeployedSwitch = true;
+        }
+
+        if (rackController.getSetpoint() == (IntakeConstants.intakeRotationsToRackRatio * IntakeConstants.intakeMinExtensionLength)) {
+            inputs.intakeRetractedSwitch = true;
+        }
     }
 
     public void setIntakeVelocity(AngularVelocity velocity) {
