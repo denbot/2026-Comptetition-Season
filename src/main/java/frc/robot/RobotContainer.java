@@ -18,13 +18,16 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
+
+import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.IntakeIOTalonFX;
+
 import frc.robot.subsystems.shooter.Shooter;
 //import frc.robot.subsystems.shooter.ShooterConstants.OperatorConstants;
 import frc.robot.subsystems.shooter.ShooterIO;
@@ -32,7 +35,6 @@ import frc.robot.subsystems.shooter.ShooterIOSim;
 import frc.robot.subsystems.shooter.ShooterIOTalonFX;
 
 import static edu.wpi.first.units.Units.RotationsPerSecond;
-
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -68,7 +70,7 @@ public class RobotContainer {
                 new ModuleIOTalonFX(TunerConstants.BackLeft),
                 new ModuleIOTalonFX(TunerConstants.BackRight));
 
-        intake = new Intake();
+        intake = new Intake(new IntakeIOTalonFX());
         shooter = new Shooter(new ShooterIOTalonFX());
 
         // The ModuleIOTalonFXS implementation provides an example implementation for
@@ -177,8 +179,9 @@ public class RobotContainer {
                     drive)
                 .ignoringDisable(true));
 
-    controller.rightTrigger().whileTrue(intake.getSpinIntakeCommand(1));//.andThen(intake.getStopIntakeCommand()));
-    controller.rightBumper().whileTrue(intake.getSpinIntakeCommand(-1));//.andThen(intake.getStopIntakeCommand()));
+    // controller.rightTrigger().onTrue(intake.setIntakeVelocitySetpoint(Constants.intakeSpeed));
+    //controller.rightTrigger().whileTrue(intake.getSpinIntakeCommand(1));//.andThen(intake.getStopIntakeCommand()));
+    //controller.rightBumper().whileTrue(intake.getSpinIntakeCommand(-1));//.andThen(intake.getStopIntakeCommand()));
 
     // Run Shooter at half speed for testing
     controller.leftTrigger().whileTrue(shooter.runSpinner());
