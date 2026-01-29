@@ -24,8 +24,17 @@ import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
+
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIOTalonFX;
+
+import frc.robot.subsystems.shooter.Shooter;
+//import frc.robot.subsystems.shooter.ShooterConstants.OperatorConstants;
+import frc.robot.subsystems.shooter.ShooterIO;
+import frc.robot.subsystems.shooter.ShooterIOSim;
+import frc.robot.subsystems.shooter.ShooterIOTalonFX;
+
+import static edu.wpi.first.units.Units.RotationsPerSecond;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -38,6 +47,7 @@ public class RobotContainer {
   // Subsystems
   private final Drive drive;
   private Intake intake;
+  private Shooter shooter;
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -61,6 +71,7 @@ public class RobotContainer {
                 new ModuleIOTalonFX(TunerConstants.BackRight));
 
         intake = new Intake(new IntakeIOTalonFX());
+        shooter = new Shooter(new ShooterIOTalonFX());
 
         // The ModuleIOTalonFXS implementation provides an example implementation for
         // TalonFXS controller connected to a CANdi with a PWM encoder. The
@@ -90,6 +101,7 @@ public class RobotContainer {
                 new ModuleIOSim(TunerConstants.FrontRight),
                 new ModuleIOSim(TunerConstants.BackLeft),
                 new ModuleIOSim(TunerConstants.BackRight));
+        shooter = new Shooter(new ShooterIOSim());
         break;
 
       default:
@@ -101,6 +113,7 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {},
                 new ModuleIO() {});
+        shooter = new Shooter(new ShooterIO() {});
         break;
     }
 
@@ -167,7 +180,16 @@ public class RobotContainer {
                 .ignoringDisable(true));
 
     // controller.rightTrigger().onTrue(intake.setIntakeVelocitySetpoint(Constants.intakeSpeed));
-  }
+    //controller.rightTrigger().whileTrue(intake.getSpinIntakeCommand(1));//.andThen(intake.getStopIntakeCommand()));
+    //controller.rightBumper().whileTrue(intake.getSpinIntakeCommand(-1));//.andThen(intake.getStopIntakeCommand()));
+
+    // Run Shooter at half speed for testing
+    controller.leftTrigger().whileTrue(shooter.runSpinner());
+    controller.leftBumper().whileTrue(shooter.runKicker());
+
+    controller.povUp().onTrue(Commands.runOnce(() -> shooter.stepSpinnerVelocitySetpoint(RotationsPerSecond.of(1))));
+    controller.povDown().onTrue(Commands.runOnce(() -> shooter.stepSpinnerVelocitySetpoint(RotationsPerSecond.of(-1))));
+}
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
