@@ -177,10 +177,9 @@ public class RobotContainer {
                     drive)
                 .ignoringDisable(true));
 
-    controller.rightTrigger().whileTrue(intake.getSpinIntakeCommand(1));//.andThen(intake.getStopIntakeCommand()));
-    controller.rightBumper().whileTrue(intake.getSpinIntakeCommand(-1));//.andThen(intake.getStopIntakeCommand()));
+    controller.rightTrigger().whileTrue(intake.getSpinIntakeCommand(0.8));//.andThen(intake.getStopIntakeCommand()));
+    controller.rightBumper().whileTrue(intake.getSpinIntakeCommand(0));//.andThen(intake.getStopIntakeCommand()));
 
-    // Run Shooter at half speed for testing
     controller.leftTrigger().whileTrue(shooter.runSpinner());
     controller.leftBumper().whileTrue(shooter.runKicker());
 
