@@ -22,6 +22,8 @@ public class Limelights extends SubsystemBase{
         public final String ip;
         public final Matrix<N3, N1> visionMatrixRejectsRotation = new Matrix<>(Nat.N3(), Nat.N1());
         public final Matrix<N3, N1> visionMatrixAcceptsRotation = new Matrix<>(Nat.N3(), Nat.N1());
+        public static final int[] blueIdsToUse = {17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28};
+        public static final int[] redIdsToUse = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
 
         Limelight(String name, String ip) {
             this.name = name;
