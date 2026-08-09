@@ -5,7 +5,7 @@ import static edu.wpi.first.units.Units.Degree;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 
-public enum onTheFlyOffsets {
+public enum AprilTagOffsets {
     TRENCH_OFFSET_NEUTRAL(1, 0, 0),
     TRENCH_OFFSET_ALLIANCE(1.75, 0, 180),
 
@@ -35,7 +35,7 @@ public enum onTheFlyOffsets {
 
     public final Transform2d transform;
 
-    onTheFlyOffsets(double x, double y, double angle){
+    AprilTagOffsets(double x, double y, double angle){
         this.transform = new Transform2d(x, y, new Rotation2d(Degree.of(angle)));
     }
 }

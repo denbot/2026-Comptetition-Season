@@ -110,14 +110,16 @@ public class Robot extends LoggedRobot {
 
   /** This function is called periodically when disabled. */
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+    robotContainer.checkColor();
+  }
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    LimelightHelpers.SetFiducialIDFiltersOverride(Limelight.BACK_LEFT.name, OperatorController.getIsBlue()?Limelight.blueIdsToUse:Limelight.redIdsToUse);
-    LimelightHelpers.SetFiducialIDFiltersOverride(Limelight.FRONT.name, OperatorController.getIsBlue()?Limelight.blueIdsToUse:Limelight.redIdsToUse);
-    LimelightHelpers.SetFiducialIDFiltersOverride(Limelight.BACK_RIGHT.name, OperatorController.getIsBlue()?Limelight.blueIdsToUse:Limelight.redIdsToUse);
+    LimelightHelpers.SetFiducialIDFiltersOverride(Limelight.BACK_LEFT.name, RobotContainer.isBlue()?Limelight.blueIdsToUse:Limelight.redIdsToUse);
+    LimelightHelpers.SetFiducialIDFiltersOverride(Limelight.FRONT.name, RobotContainer.isBlue()?Limelight.blueIdsToUse:Limelight.redIdsToUse);
+    LimelightHelpers.SetFiducialIDFiltersOverride(Limelight.BACK_RIGHT.name, RobotContainer.isBlue()?Limelight.blueIdsToUse:Limelight.redIdsToUse);
     robotContainer.stopIntermission();
     robotContainer.stopJingle();
     autonomousCommand = robotContainer.getAutonomousCommand();
@@ -144,9 +146,9 @@ public class Robot extends LoggedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     
-    LimelightHelpers.SetFiducialIDFiltersOverride(Limelight.BACK_LEFT.name, OperatorController.getIsBlue()?Limelight.blueIdsToUse:Limelight.redIdsToUse);
-    LimelightHelpers.SetFiducialIDFiltersOverride(Limelight.FRONT.name, OperatorController.getIsBlue()?Limelight.blueIdsToUse:Limelight.redIdsToUse);
-    LimelightHelpers.SetFiducialIDFiltersOverride(Limelight.BACK_RIGHT.name, OperatorController.getIsBlue()?Limelight.blueIdsToUse:Limelight.redIdsToUse);
+    LimelightHelpers.SetFiducialIDFiltersOverride(Limelight.BACK_LEFT.name, RobotContainer.isBlue()?Limelight.blueIdsToUse:Limelight.redIdsToUse);
+    LimelightHelpers.SetFiducialIDFiltersOverride(Limelight.FRONT.name, RobotContainer.isBlue()?Limelight.blueIdsToUse:Limelight.redIdsToUse);
+    LimelightHelpers.SetFiducialIDFiltersOverride(Limelight.BACK_RIGHT.name, RobotContainer.isBlue()?Limelight.blueIdsToUse:Limelight.redIdsToUse);
     
     CommandScheduler.getInstance().cancelAll();
     // this line or comment it out.

@@ -28,12 +28,9 @@ public class OperatorController {
     // 3-way rotary switch, toggles A when left, neither when center, B when right
     public final Trigger blueWonAutoToggle = operatorController2.button(2);
     public final Trigger redWonAutoToggle = operatorController2.button(3);
-    private static boolean isBlue = true;
     
     public OperatorController(AutoRoutineBuilder autoBuilder){
 
-        blueWonAutoToggle.whileTrue(Commands.runOnce(() -> {autoBuilder.setIsBlue(true); isBlue = true; SmartDashboard.putString("Current Team", isBlue?"blue":"red");Logger.recordOutput("Last Button Box Command", "Set Side to Blue");}).ignoringDisable(true));
-        redWonAutoToggle.whileTrue(Commands.runOnce(() -> {autoBuilder.setIsBlue(false); isBlue = false;SmartDashboard.putString("Current Team", isBlue?"blue":"red");Logger.recordOutput("Last Button Box Command", "Set Side to Red");}).ignoringDisable(true));
         // Add neutral sweep + score  
         neutralZoneScoreTrenchButton.onTrue(Commands.runOnce(
             () -> {
@@ -110,8 +107,5 @@ public class OperatorController {
         operatorController1.axisLessThan(1, -0.5)
             .onTrue(Commands.runOnce(() ->
                 autoBuilder.shooter.stepSpinnerVelocitySetpoint(RotationsPerSecond.of(-2))));
-    }
-    public static boolean getIsBlue(){
-        return isBlue;
     }
 }

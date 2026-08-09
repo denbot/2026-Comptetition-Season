@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.RobotContainer;
 import frc.robot.state.HubState;
 import frc.robot.state.MatchState;
 import frc.robot.state.RebuiltStateMachine;
@@ -66,8 +67,8 @@ public class Leds extends SubsystemBase{
 		this.drive = drive;
 		this.stateMachine = stateMachine;
 
-		this.stateMachine.state(HubState.ACTIVE).to(HubState.INACTIVE).run(Commands.runOnce(() -> this.isBlueActive = drive.isBlue() ? false : true));
-		this.stateMachine.state(HubState.INACTIVE).to(HubState.ACTIVE).run(Commands.runOnce(() -> this.isBlueActive = drive.isBlue() ? true : false));
+		this.stateMachine.state(HubState.ACTIVE).to(HubState.INACTIVE).run(Commands.runOnce(() -> this.isBlueActive = RobotContainer.isBlue() ? false : true));
+		this.stateMachine.state(HubState.INACTIVE).to(HubState.ACTIVE).run(Commands.runOnce(() -> this.isBlueActive = RobotContainer.isBlue() ? true : false));
 
 		this.stateMachine.state(RobotState.TELEOP, MatchState.NONE).to(MatchState.TRANSITION_SHIFT).run(getMatchStateTimerCommand(MatchState.TRANSITION_SHIFT.timeInState, 3.0));
 		this.stateMachine.state(MatchState.TRANSITION_SHIFT).to(MatchState.SHIFT_1).run(getMatchStateTimerCommand(MatchState.SHIFT_1.timeInState, 5.0));
@@ -104,13 +105,13 @@ public class Leds extends SubsystemBase{
 			).applyTo(this.ledBuffer);	
 		} else {
 			if (DriverStation.getAlliance().isPresent()) {
-				if(DriverStation.getAlliance().get() == Alliance.Red) {
-					LEDPattern.solid(Color.kRed).breathe(Seconds.of(1)).applyTo(this.ledBuffer);
-				} else {
+				if(RobotContainer.isBlue()) {
 					LEDPattern.solid(Color.kBlue).breathe(Seconds.of(1)).applyTo(this.ledBuffer);
+				} else {
+					LEDPattern.solid(Color.kRed).breathe(Seconds.of(1)).applyTo(this.ledBuffer);
 				}
 			} else {
-				LEDPattern.solid(Color.kOrangeRed).breathe(Seconds.of(0.5)).applyTo(this.ledBuffer);
+				LEDPattern.solid(Color.kOrangeRed).applyTo(this.ledBuffer);
 			} 
 		}
 
