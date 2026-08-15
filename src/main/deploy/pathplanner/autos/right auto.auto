@@ -7,7 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Example Path"
+            "pathName": "right auto first lap"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "right auto second lap"
           }
         }
       ]

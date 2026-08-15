@@ -299,7 +299,7 @@ public void updateRobotPose(){
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return autoBuilder.getAutoRoutine();
+    return autoChooser.get().andThen(autoBuilder.getAutoRoutine());
   }
 
     public void startJingle(){
