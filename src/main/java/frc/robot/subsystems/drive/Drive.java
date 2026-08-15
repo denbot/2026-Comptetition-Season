@@ -48,9 +48,9 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import frc.robot.Constants.Mode;
 import frc.robot.Constants.PointsOfInterest;
+import frc.robot.RobotContainer;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.auto.onTheFlySetpoints;
-import frc.robot.subsystems.control.OperatorController;
+import frc.robot.subsystems.auto.TargetPoses;
 import frc.robot.util.LocalADStarAK;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -376,10 +376,10 @@ public class Drive extends SubsystemBase {
 
   public Command getTestAllPointsCommand(){
     return new SequentialCommandGroup(
-      getAutoAlignmentCommand(onTheFlySetpoints.CLIMB_LEFT_SETUP.blueAlignmentPose),
-      getAutoAlignmentCommand(onTheFlySetpoints.CLIMB_LEFT_FINISH.blueAlignmentPose),
-      getAutoAlignmentCommand(onTheFlySetpoints.CLIMB_RIGHT_SETUP.blueAlignmentPose),
-      getAutoAlignmentCommand(onTheFlySetpoints.CLIMB_RIGHT_FINISH.blueAlignmentPose));
+      getAutoAlignmentCommand(TargetPoses.CLIMB_LEFT_SETUP.blueAlignmentPose),
+      getAutoAlignmentCommand(TargetPoses.CLIMB_LEFT_FINISH.blueAlignmentPose),
+      getAutoAlignmentCommand(TargetPoses.CLIMB_RIGHT_SETUP.blueAlignmentPose),
+      getAutoAlignmentCommand(TargetPoses.CLIMB_RIGHT_FINISH.blueAlignmentPose));
   }
 
   public ChassisSpeeds findFieldRelativeSpeed(Pose2d pose) {
@@ -448,7 +448,7 @@ public class Drive extends SubsystemBase {
 
     Pose2d shootingPose;
 
-    if(isBlue()) {
+    if(RobotContainer.isBlue()) {
         if (positionX.minus(PointsOfInterest.centerOfHubBlue.getMeasureX()).in(Meters) > 0) { // If we are not in our zone
             if (positionY.minus(PointsOfInterest.centerOfHubBlue.getMeasureY()).in(Meters) > 0) { // If we are in the north half of the field
                 aimForX = PointsOfInterest.cornerNW.getMeasureX();
@@ -484,9 +484,5 @@ public class Drive extends SubsystemBase {
     Logger.recordOutput("AutoAimShootingPose", new Pose2d(pose.getX() + shootingPose.getX(), pose.getY() + shootingPose.getY(), shootingPose.getRotation()));
         
     return shootingPose;
-  }
-
-  public boolean isBlue() {
-      return OperatorController.getIsBlue();
   }
 }

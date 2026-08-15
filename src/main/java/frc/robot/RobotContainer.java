@@ -13,6 +13,7 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.XboxController;
@@ -87,222 +88,231 @@ public class RobotContainer {
   // Controller
   private OperatorController operatorController;
   private final CommandXboxController controller = new CommandXboxController(0);
-
-  // Dashboard inputs
-  private final LoggedDashboardChooser<Command> autoChooser;
-
-  // State machine
-  public final RebuiltStateMachine stateMachine = new RebuiltStateMachine();
-
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
-  public RobotContainer() {
-    switch (Constants.currentMode) {
-      case REAL:
-        // Real robot, instantiate hardware IO implementations
-        // ModuleIOTalonFX is intended for modules with TalonFX drive, TalonFX turn, and
-        // a CANcoder
-        drive =
-            new Drive(
-                new GyroIOPigeon2(),
-                new ModuleIOTalonFX(TunerConstants.FrontLeft),
-                new ModuleIOTalonFX(TunerConstants.FrontRight),
-                new ModuleIOTalonFX(TunerConstants.BackLeft),
-                new ModuleIOTalonFX(TunerConstants.BackRight));
-
-        indexer = new Indexer(new IndexerIOTalonFX(), stateMachine);
-        intake = new Intake(new IntakeIOTalonFX(), stateMachine);
-        shooter = new Shooter(new ShooterIOTalonFX(), stateMachine, drive);
-        limelights = new Limelights(new LimelightIOReal(), drive);
-
-        // The ModuleIOTalonFXS implementation provides an example implementation for
-        // TalonFXS controller connected to a CANdi with a PWM encoder. The
-        // implementations
-        // of ModuleIOTalonFX, ModuleIOTalonFXS, and ModuleIOSpark (from the Spark
-        // swerve
-        // template) can be freely intermixed to support alternative hardware
-        // arrangements.
-        // Please see the AdvantageKit template documentation for more information:
-        // https://docs.advantagekit.org/getting-started/template-projects/talonfx-swerve-template#custom-module-implementations
-        //
-        // drive =
-        // new Drive(
-        // new GyroIOPigeon2(),
-        // new ModuleIOTalonFXS(TunerConstants.FrontLeft),
-        // new ModuleIOTalonFXS(TunerConstants.FrontRight),
-        // new ModuleIOTalonFXS(TunerConstants.BackLeft),
-        // new ModuleIOTalonFXS(TunerConstants.BackRight));
-        break;
-
-      case SIM:
-        // Sim robot, instantiate physics sim IO implementations
-        drive =
-            new Drive(
-                new GyroIO() {},
-                new ModuleIOSim(TunerConstants.FrontLeft),
-                new ModuleIOSim(TunerConstants.FrontRight),
-                new ModuleIOSim(TunerConstants.BackLeft),
-                new ModuleIOSim(TunerConstants.BackRight));
-        shooter = new Shooter(new ShooterIOSim(), stateMachine, drive);
-        indexer = new Indexer(new IndexerIOSim(), stateMachine);
-        intake = new Intake(new IntakeIOSim(), stateMachine);
-        limelights = new Limelights(new LimelightIOSim(), drive);
-        break;
-
-      default:
-        // Replayed robot, disable IO implementations
-        drive =
-            new Drive(
-                new GyroIO() {},
-                new ModuleIO() {},
-                new ModuleIO() {},
-                new ModuleIO() {},
-                new ModuleIO() {});
-        shooter = new Shooter(new ShooterIO() {}, stateMachine, drive);
-        intake = new Intake(new IntakeIO() {}, stateMachine);
-        limelights = new Limelights(new LimelightIOSim(), drive);
-        break;
+  private static boolean isBlue = true;
+  
+    // Dashboard inputs
+    private final LoggedDashboardChooser<Command> autoChooser;
+  
+    // State machine
+    public final RebuiltStateMachine stateMachine = new RebuiltStateMachine();
+  
+    /** The container for the robot. Contains subsystems, OI devices, and commands. */
+    public RobotContainer() {
+      switch (Constants.currentMode) {
+        case REAL:
+          // Real robot, instantiate hardware IO implementations
+          // ModuleIOTalonFX is intended for modules with TalonFX drive, TalonFX turn, and
+          // a CANcoder
+          drive =
+              new Drive(
+                  new GyroIOPigeon2(),
+                  new ModuleIOTalonFX(TunerConstants.FrontLeft),
+                  new ModuleIOTalonFX(TunerConstants.FrontRight),
+                  new ModuleIOTalonFX(TunerConstants.BackLeft),
+                  new ModuleIOTalonFX(TunerConstants.BackRight));
+  
+          indexer = new Indexer(new IndexerIOTalonFX(), stateMachine);
+          intake = new Intake(new IntakeIOTalonFX(), stateMachine);
+          shooter = new Shooter(new ShooterIOTalonFX(), stateMachine, drive);
+          limelights = new Limelights(new LimelightIOReal(), drive);
+  
+          // The ModuleIOTalonFXS implementation provides an example implementation for
+          // TalonFXS controller connected to a CANdi with a PWM encoder. The
+          // implementations
+          // of ModuleIOTalonFX, ModuleIOTalonFXS, and ModuleIOSpark (from the Spark
+          // swerve
+          // template) can be freely intermixed to support alternative hardware
+          // arrangements.
+          // Please see the AdvantageKit template documentation for more information:
+          // https://docs.advantagekit.org/getting-started/template-projects/talonfx-swerve-template#custom-module-implementations
+          //
+          // drive =
+          // new Drive(
+          // new GyroIOPigeon2(),
+          // new ModuleIOTalonFXS(TunerConstants.FrontLeft),
+          // new ModuleIOTalonFXS(TunerConstants.FrontRight),
+          // new ModuleIOTalonFXS(TunerConstants.BackLeft),
+          // new ModuleIOTalonFXS(TunerConstants.BackRight));
+          break;
+  
+        case SIM:
+          // Sim robot, instantiate physics sim IO implementations
+          drive =
+              new Drive(
+                  new GyroIO() {},
+                  new ModuleIOSim(TunerConstants.FrontLeft),
+                  new ModuleIOSim(TunerConstants.FrontRight),
+                  new ModuleIOSim(TunerConstants.BackLeft),
+                  new ModuleIOSim(TunerConstants.BackRight));
+          shooter = new Shooter(new ShooterIOSim(), stateMachine, drive);
+          indexer = new Indexer(new IndexerIOSim(), stateMachine);
+          intake = new Intake(new IntakeIOSim(), stateMachine);
+          limelights = new Limelights(new LimelightIOSim(), drive);
+          break;
+  
+        default:
+          // Replayed robot, disable IO implementations
+          drive =
+              new Drive(
+                  new GyroIO() {},
+                  new ModuleIO() {},
+                  new ModuleIO() {},
+                  new ModuleIO() {},
+                  new ModuleIO() {});
+          shooter = new Shooter(new ShooterIO() {}, stateMachine, drive);
+          intake = new Intake(new IntakeIO() {}, stateMachine);
+          limelights = new Limelights(new LimelightIOSim(), drive);
+          break;
+      }
+  
+      leds = new Leds(limelights, controller, shooter, drive, stateMachine);
+  
+      // Set up auto routines
+      autoBuilder = new AutoRoutineBuilder(intake, shooter, indexer, drive);
+      operatorController = new OperatorController(autoBuilder);
+      autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+  
+      // Mute controller disconnected warnings
+      DriverStation.silenceJoystickConnectionWarning(true);
+  
+      // Set up SysId routines
+      autoChooser.addOption(
+          "Drive Wheel Radius Characterization", DriveCommands.wheelRadiusCharacterization(drive));
+      autoChooser.addOption(
+          "Drive Simple FF Characterization", DriveCommands.feedforwardCharacterization(drive));
+      autoChooser.addOption(
+          "Drive SysId (Quasistatic Forward)",
+          drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+      autoChooser.addOption(
+          "Drive SysId (Quasistatic Reverse)",
+          drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+      autoChooser.addOption(
+          "Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
+      autoChooser.addOption(
+          "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+  
+      // Configure the button bindings
+      configureButtonBindings();
+  
+      IntakeState.setup(
+              stateMachine,
+              controller.leftTrigger(),
+              controller.b()
+      );
+  
+      HopperState.setup(
+              stateMachine,
+              controller.leftTrigger(),
+              controller.leftBumper(),
+              controller.b()
+      );
+  
+      KickerState.setup(
+              stateMachine,
+              controller.rightTrigger(),
+              controller.leftTrigger(),
+              controller.b(),
+              controller.a(),
+              operatorController.churnTrigger
+      );
+  
+      ShooterState.setup(
+              stateMachine,
+              controller.rightBumper(),
+              controller.y(),
+              controller.x()
+      );
+      IndexerState.setup(
+              stateMachine, 
+              controller.rightTrigger(), 
+              controller.leftTrigger(), 
+              controller.a(), 
+              controller.b(),
+              operatorController.churnTrigger
+      );
+      MatchState.setup(stateMachine);
     }
-
-    leds = new Leds(limelights, controller, shooter, drive, stateMachine);
-
-    // Set up auto routines
-    autoBuilder = new AutoRoutineBuilder(intake, shooter, indexer, drive);
-    operatorController = new OperatorController(autoBuilder);
-    autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
-
-    // Mute controller disconnected warnings
-    DriverStation.silenceJoystickConnectionWarning(true);
-
-    // Set up SysId routines
-    autoChooser.addOption(
-        "Drive Wheel Radius Characterization", DriveCommands.wheelRadiusCharacterization(drive));
-    autoChooser.addOption(
-        "Drive Simple FF Characterization", DriveCommands.feedforwardCharacterization(drive));
-    autoChooser.addOption(
-        "Drive SysId (Quasistatic Forward)",
-        drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-    autoChooser.addOption(
-        "Drive SysId (Quasistatic Reverse)",
-        drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-    autoChooser.addOption(
-        "Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
-    autoChooser.addOption(
-        "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-
-    // Configure the button bindings
-    configureButtonBindings();
-
-    IntakeState.setup(
-            stateMachine,
-            controller.leftTrigger(),
-            controller.b()
-    );
-
-    HopperState.setup(
-            stateMachine,
-            controller.leftTrigger(),
-            controller.leftBumper(),
-            controller.b()
-    );
-
-    KickerState.setup(
-            stateMachine,
-            controller.rightTrigger(),
-            controller.leftTrigger(),
-            controller.b(),
-            controller.a(),
-            operatorController.churnTrigger
-    );
-
-    ShooterState.setup(
-            stateMachine,
-            controller.rightBumper(),
-            controller.y(),
-            controller.x()
-    );
-    IndexerState.setup(
-            stateMachine, 
-            controller.rightTrigger(), 
-            controller.leftTrigger(), 
-            controller.a(), 
-            controller.b(),
-            operatorController.churnTrigger
-    );
-    MatchState.setup(stateMachine);
+  
+    /**
+     * Use this method to define your button->command mappings. Buttons can be created by
+     * instantiating a {@link GenericHID} or one of its subclasses ({@link
+     * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
+     * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
+     */
+    private void configureButtonBindings() {
+      // Default command, normal field-relative drive
+      drive.setDefaultCommand(
+          DriveCommands.joystickDrive(
+              drive,
+              () -> -xLim.calculate(controller.getLeftY()),
+              () -> -yLim.calculate(controller.getLeftX()),
+              () -> -oLim.calculate(controller.getRightX())));
+  
+      // Lock to 0° when right stick button is held
+      controller.rightStick()
+          .whileTrue(DriveCommands.joystickDriveAtAngle(
+                  drive,
+                  () -> -controller.getLeftY(),
+                  () -> -controller.getLeftX(),
+                  () -> Rotation2d.kZero));
+      
+      // Reset gyro to 0° when start button is pressed
+      controller.start()
+          .onTrue(Commands.runOnce(() -> 
+                  drive.setPose(new Pose2d(drive.getPose().getTranslation(), Rotation2d.kZero)),drive)
+          .ignoringDisable(true));
+  
+      // "Spin up" command, getting spinner to speed and auto aiming to a target position (Target position to be replaced by state machine later)
+      controller.rightBumper().whileTrue(
+              DriveCommands.joystickDriveAtAngle(
+              drive,
+              () -> -controller.getLeftY(),
+              () -> -controller.getLeftX(),
+              () -> drive.findShootingPose(drive.getPose()).getRotation())
+              .andThen(Commands.runOnce(() -> drive.stopWithX())));
+  
+      // "Spin up" command, getting spinner to speed and auto aiming to a target position (Target position to be replaced by state machine later)
+      controller.x().whileTrue(
+              DriveCommands.joystickDriveAtAngle(
+              drive,
+              () -> -controller.getLeftY(),
+              () -> -controller.getLeftX(),
+              () -> drive.findShootingPose(drive.getPose()).getRotation())
+              .andThen(Commands.runOnce(() -> drive.stopWithX())));
+      
+      controller.povUp().onTrue(
+        Commands.runOnce(() -> shooter.stepSpinnerVelocitySetpoint(RotationsPerSecond.of(1))));
+  
+      controller.povDown().onTrue(
+        Commands.runOnce(() -> shooter.stepSpinnerVelocitySetpoint(RotationsPerSecond.of(-1))));
+  }
+  
+  public Pose2d getRobotPosition(){
+      return drive.getPose();
+  }
+  
+  public void updateRobotPose(){
+      limelights.getAllPoseEstimate();
+  }
+  
+    /**
+     * Use this to pass the autonomous command to the main {@link Robot} class.
+     *
+     * @return the command to run in autonomous
+     */
+    public Command getAutonomousCommand() {
+      return autoBuilder.getAutoRoutine();
+    }
+  
+    public void checkColor(){
+      isBlue = DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue;
+    }
+  
+    public static boolean isBlue(){
+      return isBlue;
   }
 
-  /**
-   * Use this method to define your button->command mappings. Buttons can be created by
-   * instantiating a {@link GenericHID} or one of its subclasses ({@link
-   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
-   * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
-   */
-  private void configureButtonBindings() {
-    // Default command, normal field-relative drive
-    drive.setDefaultCommand(
-        DriveCommands.joystickDrive(
-            drive,
-            () -> -xLim.calculate(controller.getLeftY()),
-            () -> -yLim.calculate(controller.getLeftX()),
-            () -> -oLim.calculate(controller.getRightX())));
-
-    // Lock to 0° when right stick button is held
-    controller.rightStick()
-        .whileTrue(DriveCommands.joystickDriveAtAngle(
-                drive,
-                () -> -controller.getLeftY(),
-                () -> -controller.getLeftX(),
-                () -> Rotation2d.kZero));
-    
-    // Reset gyro to 0° when start button is pressed
-    controller.start()
-        .onTrue(Commands.runOnce(() -> 
-                drive.setPose(new Pose2d(drive.getPose().getTranslation(), Rotation2d.kZero)),drive)
-        .ignoringDisable(true));
-
-    // "Spin up" command, getting spinner to speed and auto aiming to a target position (Target position to be replaced by state machine later)
-    controller.rightBumper().whileTrue(
-            DriveCommands.joystickDriveAtAngle(
-            drive,
-            () -> -controller.getLeftY(),
-            () -> -controller.getLeftX(),
-            () -> drive.findShootingPose(drive.getPose()).getRotation())
-            .andThen(Commands.runOnce(() -> drive.stopWithX())));
-
-    // "Spin up" command, getting spinner to speed and auto aiming to a target position (Target position to be replaced by state machine later)
-    controller.x().whileTrue(
-            DriveCommands.joystickDriveAtAngle(
-            drive,
-            () -> -controller.getLeftY(),
-            () -> -controller.getLeftX(),
-            () -> drive.findShootingPose(drive.getPose()).getRotation())
-            .andThen(Commands.runOnce(() -> drive.stopWithX())));
-    
-    controller.povUp().onTrue(
-      Commands.runOnce(() -> shooter.stepSpinnerVelocitySetpoint(RotationsPerSecond.of(1))));
-
-    controller.povDown().onTrue(
-      Commands.runOnce(() -> shooter.stepSpinnerVelocitySetpoint(RotationsPerSecond.of(-1))));
-}
-
-public Pose2d getRobotPosition(){
-    return drive.getPose();
-}
-
-public void updateRobotPose(){
-    limelights.getAllPoseEstimate();
-}
-
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
-  public Command getAutonomousCommand() {
-    return autoChooser.get().andThen(autoBuilder.getAutoRoutine());
-  }
-
-    public void startJingle(){
+  public void startJingle(){
     intake.startJingle();
   }
 
